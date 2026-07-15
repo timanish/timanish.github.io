@@ -73,6 +73,7 @@ const yearsOfExperience = new Date().getFullYear() - 2016;
       <a class="btn primary" href="mailto:timsina.anish@gmail.com">Say hello</a>
       <a class="btn" href="https://www.linkedin.com/in/anishtimsina" rel="noopener">LinkedIn</a>
       <a class="btn" href="https://github.com/timanish" rel="noopener">GitHub</a>
+      <button class="btn journey-open" type="button">🗺️&nbsp;My journey</button>
     </div>
     <dl class="stats reveal">
       <div><dt>{yearsOfExperience}+</dt><dd>years shipping software</dd></div>
@@ -150,7 +151,7 @@ const yearsOfExperience = new Date().getFullYear() - 2016;
     <div class="map-card" role="dialog" aria-label="The journey from Kathmandu to Fort Worth">
       <button id="map-close" aria-label="Close map">✕</button>
       <div id="map"></div>
-      <p class="mono map-caption">Kathmandu 🏔️ → Lincoln 🎓 → Fort Worth 🤠</p>
+      <p class="mono map-caption">Jhapa → Dhulikhel → Lincoln → Seattle → Austin → Fort Worth → Irving</p>
     </div>
   </div>
 
@@ -195,9 +196,13 @@ const yearsOfExperience = new Date().getFullYear() - 2016;
     let mapReady = false;
 
     const stops: Array<[number, number, string]> = [
-      [85.324, 27.7172, '🏔️ Kathmandu'],
+      [87.99, 26.65, '🌱 Jhapa'],
+      [85.5433, 27.6203, '🏔️ Dhulikhel'],
       [-96.7026, 40.8136, '🎓 Lincoln'],
+      [-122.3321, 47.6062, '🌧️ Seattle'],
+      [-97.7431, 30.2672, '🎸 Austin'],
       [-97.3308, 32.7555, '🤠 Fort Worth'],
+      [-96.9489, 32.814, '📍 Irving'],
     ];
 
     function loadOnce(tag: 'script' | 'link', url: string) {
@@ -263,9 +268,11 @@ const yearsOfExperience = new Date().getFullYear() - 2016;
         new maplibregl.Marker({ element: el, anchor: 'bottom' }).setLngLat([lng, lat]).addTo(map);
       }
       const tour = [
-        { center: stops[0].slice(0, 2), zoom: 4.5, duration: 2600 },
-        { center: stops[1].slice(0, 2), zoom: 4.5, duration: 4200 },
-        { center: stops[2].slice(0, 2), zoom: 5.5, duration: 2600 },
+        { center: [86.75, 27.15], zoom: 6, duration: 2400 },
+        { center: stops[2].slice(0, 2), zoom: 4.8, duration: 4200 },
+        { center: stops[3].slice(0, 2), zoom: 5.5, duration: 2600 },
+        { center: stops[4].slice(0, 2), zoom: 5.5, duration: 2600 },
+        { center: [-97.14, 32.79], zoom: 8, duration: 2600 },
       ];
       let leg = 0;
       const nextLeg = () => {
@@ -287,6 +294,7 @@ const yearsOfExperience = new Date().getFullYear() - 2016;
       document.body.style.overflow = '';
     }
     journeyBtn?.addEventListener('click', openModal);
+    document.querySelectorAll('.journey-open').forEach((b) => b.addEventListener('click', openModal));
     closeBtn?.addEventListener('click', closeModal);
     modal.querySelector('.map-backdrop')?.addEventListener('click', closeModal);
     document.addEventListener('keydown', (e) => {
@@ -321,6 +329,11 @@ const yearsOfExperience = new Date().getFullYear() - 2016;
     }
     .typed-wrap { color: var(--accent); font-weight: 700; }
     .sub { margin-top: 0.9rem; color: var(--text-dim); }
+    .journey-open {
+      background: none;
+      font: inherit;
+      cursor: pointer;
+    }
     .journey {
       background: none;
       border: none;
