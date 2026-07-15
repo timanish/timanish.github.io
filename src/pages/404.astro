@@ -1,0 +1,55 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base
+  title="404 · Anish Timsina"
+  description="This page could not be found."
+>
+  <section class="lost">
+    <div class="term mono" aria-hidden="true">
+      <p><span class="prompt">$</span> curl -s https://timanish.github.io<span id="lost-path">/wherever-you-were-going</span></p>
+      <p class="err">404: route not found</p>
+      <p><span class="prompt">$</span> locate --page<span class="cursor">▊</span></p>
+    </div>
+    <h1 class="grad-text">Off the map</h1>
+    <p>
+      I collect telemetry on billions of map interactions, and even I have no idea where
+      this page went. It was probably never here. Or it moved to Fort Worth without
+      telling anyone.
+    </p>
+    <div class="lost-links">
+      <a class="btn primary" href="/">Take me home</a>
+      <a class="btn" href="/now/">See what I'm up to</a>
+    </div>
+  </section>
+
+  <script>
+    const el = document.getElementById('lost-path');
+    if (el && location.pathname !== '/') el.textContent = location.pathname;
+  </script>
+
+  <style>
+    .lost { padding: 6rem 0; max-width: 60ch; }
+    .term {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.1rem 1.3rem;
+      margin-bottom: 2rem;
+      font-size: 0.88rem;
+      overflow-x: auto;
+    }
+    .term p { white-space: nowrap; }
+    .prompt { color: var(--accent); margin-right: 0.5ch; }
+    .err { color: #f87171; }
+    .cursor { animation: blink 1.1s steps(1) infinite; margin-left: 2px; color: var(--accent); }
+    @keyframes blink { 50% { opacity: 0; } }
+    .lost h1 { font-size: clamp(2.2rem, 6vw, 3.4rem); margin-bottom: 0.8rem; }
+    .lost > p { color: var(--text-dim); }
+    .lost-links { display: flex; gap: 0.75rem; margin-top: 1.8rem; flex-wrap: wrap; }
+    @media (prefers-reduced-motion: reduce) {
+      .cursor { animation: none; }
+    }
+  </style>
+</Base>

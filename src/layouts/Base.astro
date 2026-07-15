@@ -1,0 +1,344 @@
+---
+interface Props {
+  title: string;
+  description: string;
+}
+const { title, description } = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://timanish.github.io" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;800&family=JetBrains+Mono:wght@400;700&display=swap"
+    />
+  </head>
+  <body>
+    <div class="topo" aria-hidden="true">
+      <svg width="100%" height="100%" preserveAspectRatio="xMidYMid slice" viewBox="0 0 900 600" xmlns="http://www.w3.org/2000/svg">
+        <g fill="none" stroke="var(--topo-line)" stroke-width="1.2">
+          <path d="M-50,120 C150,60 280,180 450,140 C620,100 720,200 950,150" />
+          <path d="M-50,170 C160,110 290,230 460,190 C630,150 730,250 950,200" />
+          <path d="M-50,220 C170,160 300,280 470,240 C640,200 740,300 950,250" />
+          <path d="M-50,280 C180,220 310,340 480,300 C650,260 750,360 950,310" />
+          <path d="M-50,340 C190,280 320,400 490,360 C660,320 760,420 950,370" />
+          <path d="M-50,400 C200,340 330,460 500,420 C670,380 770,480 950,430" />
+          <path d="M-50,460 C210,400 340,520 510,480 C680,440 780,540 950,490" />
+          <path d="M-50,520 C220,460 350,580 520,540 C690,500 790,600 950,550" />
+        </g>
+      </svg>
+    </div>
+
+    <header class="site-head">
+      <div class="nav">
+        <a class="logo" href="/">anish<span class="accent">.</span>timsina</a>
+        <nav>
+          <a href="/#about">About</a>
+          <a href="/#experience">Experience</a>
+          <a href="/#contact">Contact</a>
+          <a href="/now/">Now</a>
+          <button id="theme-toggle" aria-label="Toggle color theme" title="Toggle theme">
+            <span class="sun">☀️</span><span class="moon">🌙</span>
+          </button>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <footer>
+      <p class="mono">
+        Built with <a href="https://astro.build" rel="noopener">Astro</a> ·
+        hosted on GitHub Pages ·
+        <a href="https://github.com/timanish/timanish.github.io" rel="noopener">view source</a> ·
+        powered by coffee ☕
+      </p>
+      <p class="mono dim">© {new Date().getFullYear()} Anish Timsina · psst, try the Konami code</p>
+    </footer>
+
+    <script>
+      const root = document.documentElement;
+      const stored = localStorage.getItem('theme');
+      if (stored) root.dataset.theme = stored;
+
+      document.getElementById('theme-toggle')?.addEventListener('click', () => {
+        const dark = root.dataset.theme
+          ? root.dataset.theme === 'dark'
+          : window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const next = dark ? 'light' : 'dark';
+        root.dataset.theme = next;
+        localStorage.setItem('theme', next);
+      });
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          for (const entry of entries) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+              observer.unobserve(entry.target);
+            }
+          }
+        },
+        { threshold: 0.1 }
+      );
+      document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
+
+      // Konami code party mode
+      const konami = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+      let pos = 0;
+      let party: ReturnType<typeof setInterval> | null = null;
+      const palette = ['#34d399', '#38bdf8', '#f472b6', '#fbbf24', '#a78bfa', '#fb7185'];
+      document.addEventListener('keydown', (e) => {
+        pos = e.key === konami[pos] ? pos + 1 : e.key === konami[0] ? 1 : 0;
+        if (pos < konami.length) return;
+        pos = 0;
+        if (party) {
+          clearInterval(party);
+          party = null;
+          root.style.removeProperty('--accent');
+          root.style.removeProperty('--accent-soft');
+        } else {
+          let i = 0;
+          party = setInterval(() => {
+            const color = palette[i++ % palette.length];
+            root.style.setProperty('--accent', color);
+            root.style.setProperty('--accent-soft', color + '22');
+          }, 350);
+        }
+      });
+    </script>
+
+    <style is:global>
+      :root {
+        --bg: #f8fafc;
+        --bg-card: #ffffff;
+        --text: #1e293b;
+        --text-dim: #64748b;
+        --accent: #059669;
+        --accent-soft: #05966915;
+        --border: #e2e8f0;
+        --topo-line: #05966912;
+        --grad-a: #059669;
+        --grad-b: #0d9488;
+        --grad-c: #0284c7;
+        --head-bg: #f8fafccc;
+      }
+      :root[data-theme='dark'] {
+        --bg: #0f172a;
+        --bg-card: #1e293b;
+        --text: #e2e8f0;
+        --text-dim: #94a3b8;
+        --accent: #34d399;
+        --accent-soft: #34d39918;
+        --border: #33415577;
+        --topo-line: #34d39914;
+        --grad-a: #34d399;
+        --grad-b: #2dd4bf;
+        --grad-c: #38bdf8;
+        --head-bg: #0f172acc;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme='light']) {
+          --bg: #0f172a;
+          --bg-card: #1e293b;
+          --text: #e2e8f0;
+          --text-dim: #94a3b8;
+          --accent: #34d399;
+          --accent-soft: #34d39918;
+          --border: #33415577;
+          --topo-line: #34d39914;
+          --grad-a: #34d399;
+          --grad-b: #2dd4bf;
+          --grad-c: #38bdf8;
+          --head-bg: #0f172acc;
+        }
+      }
+
+      * { box-sizing: border-box; margin: 0; }
+      html { scroll-behavior: smooth; }
+      body {
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.65;
+        transition: background 0.3s, color 0.3s;
+      }
+      .mono {
+        font-family: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+        font-size: 0.9em;
+      }
+      .accent { color: var(--accent); transition: color 0.3s; }
+      .dim { color: var(--text-dim); }
+      a { color: var(--accent); text-decoration: none; }
+      a:hover { text-decoration: underline; }
+      ::selection { background: var(--accent); color: var(--bg); }
+
+      .topo {
+        position: fixed;
+        inset: 0;
+        z-index: -1;
+        pointer-events: none;
+      }
+
+      .site-head {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background: var(--head-bg);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--border);
+      }
+      .nav {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 860px;
+        margin: 0 auto;
+        padding: 0.9rem 1.5rem;
+      }
+      .nav .logo {
+        font-weight: 700;
+        font-size: 1.05rem;
+        color: var(--text);
+        font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+      }
+      .nav nav { display: flex; align-items: center; gap: 1.1rem; }
+      .nav nav a { color: var(--text-dim); font-size: 0.95rem; }
+      .nav nav a:hover { color: var(--accent); text-decoration: none; }
+      #theme-toggle {
+        background: none;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 0.25rem 0.5rem;
+        cursor: pointer;
+        font-size: 0.9rem;
+        transition: transform 0.15s, border-color 0.15s;
+      }
+      #theme-toggle:hover { transform: scale(1.08); border-color: var(--accent); }
+      .sun { display: none; }
+      .moon { display: inline; }
+      :root[data-theme='dark'] .sun { display: inline; }
+      :root[data-theme='dark'] .moon { display: none; }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme='light']) .sun { display: inline; }
+        :root:not([data-theme='light']) .moon { display: none; }
+      }
+
+      main { max-width: 860px; margin: 0 auto; padding: 0 1.5rem; }
+      section { padding: 3.5rem 0; }
+
+      .btn {
+        display: inline-block;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 0.55rem 1.1rem;
+        color: var(--text);
+        font-weight: 500;
+        transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+      }
+      .btn:hover {
+        text-decoration: none;
+        border-color: var(--accent);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 14px var(--accent-soft);
+      }
+      .btn.primary {
+        background: linear-gradient(100deg, var(--grad-a), var(--grad-b));
+        border: none;
+        color: #fff;
+      }
+      :root[data-theme='dark'] .btn.primary { color: #0f172a; }
+      @media (prefers-color-scheme: dark) {
+        :root:not([data-theme='light']) .btn.primary { color: #0f172a; }
+      }
+      .btn.big { font-size: 1.05rem; padding: 0.7rem 1.4rem; }
+
+      h2 {
+        font-size: 1.6rem;
+        margin-bottom: 1.2rem;
+        letter-spacing: -0.01em;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+      }
+      h2::after {
+        content: '';
+        flex: 0 1 8rem;
+        height: 2px;
+        margin-left: 0.4rem;
+        background: linear-gradient(90deg, var(--accent), transparent);
+        border-radius: 2px;
+      }
+      section p + p { margin-top: 0.9rem; }
+      section > p { max-width: 62ch; }
+
+      .grad-text {
+        font-weight: 800;
+        letter-spacing: -0.02em;
+        line-height: 1.1;
+        background: linear-gradient(100deg, var(--grad-a), var(--grad-b) 45%, var(--grad-c));
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+      }
+
+      .tags {
+        list-style: none;
+        padding: 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.45rem;
+        margin-top: 0.7rem;
+      }
+      .tags li {
+        background: var(--accent-soft);
+        color: var(--accent);
+        border-radius: 999px;
+        padding: 0.18rem 0.75rem;
+        font-size: 0.82rem;
+        font-family: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+        transition: transform 0.15s, background 0.3s, color 0.3s;
+      }
+      .tags li:hover { transform: translateY(-2px) scale(1.04); }
+
+      footer {
+        border-top: 1px solid var(--border);
+        text-align: center;
+        padding: 2rem 1.5rem;
+        color: var(--text-dim);
+        font-size: 0.85rem;
+      }
+      footer p + p { margin-top: 0.4rem; }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(18px);
+        transition: opacity 0.6s ease, transform 0.6s ease;
+      }
+      .reveal.visible { opacity: 1; transform: none; }
+      @media (prefers-reduced-motion: reduce) {
+        .reveal { opacity: 1; transform: none; transition: none; }
+        html { scroll-behavior: auto; }
+        .btn:hover, .tags li:hover { transform: none; }
+      }
+
+      @media (max-width: 640px) {
+        .nav nav a:not(:last-of-type) { display: none; }
+      }
+    </style>
+  </body>
+</html>
