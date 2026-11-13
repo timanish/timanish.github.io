@@ -48,6 +48,7 @@ const { title, description } = Astro.props;
           <a href="/#experience">Experience</a>
           <a href="/#contact">Contact</a>
           <a href="/now/">Now</a>
+          <a href="/puzzles/">Puzzles</a>
           <button id="theme-toggle" aria-label="Toggle color theme" title="Toggle theme">
             <span class="sun">☀️</span><span class="moon">🌙</span>
           </button>
@@ -337,7 +338,7 @@ const { title, description } = Astro.props;
       }
 
       @media (max-width: 640px) {
-        .nav nav a:not(:last-of-type) { display: none; }
+        .nav nav a:not(:nth-last-of-type(-n + 2)) { display: none; }
       }
     </style>
   </body>
